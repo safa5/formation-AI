@@ -6,7 +6,7 @@ PROCEDURE MVT.LISTE.MOUVEMENTS (Prm.code.portefeuille, Prm.date.debut, Prm.date.
 !              écrite dans un fichier texte (support du TP Spec-Driven)
 !IA/CAB 27/10/26 : Création du programme support de TP
 %=======================================================================%
-BEGIN
+BEGIN   
 INCLUDE FILE 'BIB_APPLICATION:BIBBUILTINS.BIB'
 INCLUDE FILE 'BIB_APPLICATION:BIBMVTUTIL.BIB'
 
