@@ -1,0 +1,55 @@
+! =====================================================================
+! Bibliothèque : BIBMVTUTIL.BIB
+! Auteur       : CAB
+! Date         : 27/10/2026
+! Description  : Utilitaires de lecture des portefeuilles pour les
+!                traitements sur les mouvements
+! Préfixe local: MVU
+! =====================================================================
+
+! =====> UTILISATION
+!
+! Exemple 1 : contrôler l'existence d'un portefeuille
+!   IF MVU.PORTEFEUILLE.EXISTE(Prm.code.portefeuille) = Mag.false
+!   THEN
+!       MISE.A.JOUR.ANOMALIE("ERR", "Portefeuille inconnu")
+!   ELSE
+!       NOTHING
+!
+! Exemple 2 : récupérer le libellé long d'un portefeuille
+!   MOVE MVU.LIBELLE.PORTEFEUILLE(Prm.code.portefeuille) TO Lib.portefeuille
+!
+! =====================================================================
+
+FIELD
+    MVU.Code.portefeuille SAME AS Code.portefeuille
+
+! =====================================================================
+! Fonctions
+! =====================================================================
+
+!IA/CAB 27/10/26
+FUNCTION MVU.PORTEFEUILLE.EXISTE (MVU.Code.portefeuille) SAME AS Booleen
+%===========================================================================%
+BEGIN
+    MOVE Mag.false TO MVU.PORTEFEUILLE.EXISTE
+
+    SELECT Descriptif.portefeuille VIA (Code.portefeuille = MVU.Code.portefeuille)
+    THEN
+        MOVE Mag.true TO MVU.PORTEFEUILLE.EXISTE
+    ELSE
+        NOTHING
+END
+
+!IA/CAB 27/10/26
+FUNCTION MVU.LIBELLE.PORTEFEUILLE (MVU.Code.portefeuille) SAME AS Libelle.port.l
+%===========================================================================%
+BEGIN
+    MOVE " " TO MVU.LIBELLE.PORTEFEUILLE
+
+    SELECT Descriptif.portefeuille VIA (Code.portefeuille = MVU.Code.portefeuille)
+    THEN
+        MOVE Libelle.port.l TO MVU.LIBELLE.PORTEFEUILLE
+    ELSE
+        NOTHING
+END

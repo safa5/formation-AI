@@ -1,0 +1,34 @@
+EXTRAIT DU SCHEMA GP2016 (source : adl/src/mag/d/*) - champs utiles au TP uniquement
+====================================================================================
+
+RELATION Descriptif.portefeuille
+  KEY  : Code.portefeuille
+  DATA : Libelle.port.c
+         Libelle.port.l
+         Date.creation        (DATE "YYYYMMDD")
+         Code.type.port
+         Devise.portefeuille
+         Code.client
+
+RELATION Mouvement
+  KEY  : Code.portefeuille
+         Type.stock
+         Categorie.valeur
+         Code.valeur
+         Histo.date.fiscale
+         Type.mouvement
+         Code.mouvement
+  DATA : Statut.ligne
+         Code.evenement
+         Code.transaction
+         Type.transaction
+         Code.depositaire
+         Date.effet           (DATE "YYYYMMDD")
+         Prix.entree.sortie
+         Prix.entree.sortie.dv
+         Quantite.exercee
+         Plus.value.long.terme.dc
+         Plus.value.court.terme.dc
+
+Remarque : les valeurs de Type.mouvement utilisées dans data/mouvements_sample.csv
+(ACH = achat, VEN = vente) sont fictives et propres au TP.

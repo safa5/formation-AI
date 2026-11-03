@@ -1,0 +1,55 @@
+PROCEDURE MVT.LISTE.MOUVEMENTS (Prm.code.portefeuille, Prm.date.debut, Prm.date.fin)
+%=======================================================================%
+! Auteur     : CAB
+! Date       : 27/10/2026
+! Description: Liste des mouvements d'un portefeuille sur une période,
+!              écrite dans un fichier texte (support du TP Spec-Driven)
+!IA/CAB 27/10/26 : Création du programme support de TP
+%=======================================================================%
+BEGIN
+INCLUDE FILE 'BIB_APPLICATION:BIBBUILTINS.BIB'
+INCLUDE FILE 'BIB_APPLICATION:BIBMVTUTIL.BIB'
+
+CONSTANT Mag.true  = 'O'
+        ,Mag.false = 'N'
+
+FIELD
+    Prm.code.portefeuille  SAME AS Code.portefeuille
+    ,Prm.date.debut        SAME AS Date.effet
+    ,Prm.date.fin          SAME AS Date.effet
+    ,Lib.portefeuille      SAME AS Libelle.port.l
+    ,Nb.mouvements         AS '6N'
+
+REPORT Etat.mouvements TO "MVT_LISTE.TXT/ANY" PAGE.SIZE 0 LINE.LENGTH 200
+
+!IA/CAB 27/10/26
+! Contrôle du portefeuille demandé
+IF MVU.PORTEFEUILLE.EXISTE(Prm.code.portefeuille) = Mag.false
+THEN
+    MISE.A.JOUR.ANOMALIE("ERR", "Portefeuille inconnu")
+ELSE
+    BEGIN
+        MOVE MVU.LIBELLE.PORTEFEUILLE(Prm.code.portefeuille) TO Lib.portefeuille
+        MOVE 0 TO Nb.mouvements
+
+        WRITE REPORT Etat.mouvements
+        PRINT TO Etat.mouvements "Portefeuille : ", Prm.code.portefeuille, " - ", Lib.portefeuille, @CR
+
+        ! Une ligne par mouvement de la période, triée par date d'effet
+        FOR EACH Mouvement VIA (Code.portefeuille = Prm.code.portefeuille)
+            SORTED ON Date.effet
+        DO
+            IF Date.effet >= Prm.date.debut AND Date.effet <= Prm.date.fin
+            THEN
+                BEGIN
+                    PRINT TO Etat.mouvements Date.effet, ";", Code.valeur, ";", Type.mouvement, ";",
+                        Quantite.exercee, ";", Prix.entree.sortie, @CR
+                    LET Nb.mouvements = Nb.mouvements + 1
+                END
+            ELSE
+                NOTHING
+
+        PRINT TO Etat.mouvements "Nombre de mouvements : ", Nb.mouvements, @CR
+    END
+
+END % MVT.LISTE.MOUVEMENTS %
